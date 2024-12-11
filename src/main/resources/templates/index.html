@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Calendar Events</title>
+        <style>
+            .button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 5px;
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+            }
+            .button:hover {
+                opacity: 0.8;
+            }
+            .button.logout {
+                background-color: #f44336;
+            }
+            nav {
+                margin: 20px 0;
+            }
+            form {
+                display: inline;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Calendar Events</h1>
+        
+        <nav>
+            <a th:href="@{/events}" class="button">View All Events</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="button" style="background-color: #f44336;">Logout</button>
+            </form>
+        </nav>
+        
+        <h2>Add new event</h2>
+        <form th:action="@{/events}" method="POST">
+            <div th:if="${error}" style="color: red; margin: 10px 0;">
+                <p th:text="${error}">Error message</p>
+            </div>
+            
+            <div>
+                <label>Title:</label>
+                <input type="text" name="title" required/>
+            </div>
+            <div>
+                <label>Description:</label>
+                <textarea name="description"></textarea>
+            </div>
+            <div>
+                <label>Date and time:</label>
+                <input type="datetime-local" name="dateTime" required 
+                       th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"/>
+            </div>
+            <div>
+                <label>Categories:</label>
+                <select name="categoryIds" multiple>
+                    <option th:each="category : ${categories}" 
+                            th:value="${category.id}" 
+                            th:text="${category.name}">
+                    </option>
+                </select>
+            </div>
+            <button type="submit">Add Event</button>
+        </form>
+
+        <h2>Recent Events</h2>
+        <div th:if="${events.empty}">
+            <p>No events found.</p>
+        </div>
+        <div th:each="event : ${events}">
+            <h3>
+                <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.title}">Event title</a>
+            </h3>
+            <p th:text="${#temporals.format(event.dateTime, 'dd-MM-yyyy HH:mm')}">Date</p>
+            <div>
+                Categories:
+                <span th:if="${event.categories.empty}">No categories</span>
+                <span th:each="category : ${event.categories}">
+                    <a th:href="@{/categories/{id}(id=${category.id})}" 
+                       th:text="${category.name}">Category</a>
+                </span>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Events</title>
+        <style>
+            .button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 5px;
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+            }
+            nav {
+                margin: 20px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Events</h1>
+        
+        <nav>
+            <a th:href="@{/}" class="button">Back to Home</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="button" style="background-color: #f44336;">Logout</button>
+            </form>
+        </nav>
+        
+        <div th:if="${error}" style="color: red; margin: 10px 0;">
+            <p th:text="${error}">Error message</p>
+        </div>
+        
+        <div th:if="${events == null}">
+            <p>Error loading events.</p>
+        </div>
+        
+        <div th:if="${events != null and events.empty}">
+            <p>No events found.</p>
+        </div>
+        
+        <div th:if="${events != null}" th:each="event : ${events}">
+            <h3>
+                <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.title}">Event title</a>
+            </h3>
+            <p th:text="${#temporals.format(event.dateTime, 'dd-MM-yyyy HH:mm')}">Date</p>
+            <div>
+                Categories:
+                <span th:if="${event.categories.empty}">No categories</span>
+                <span th:each="category : ${event.categories}">
+                    <a th:href="@{/categories/{id}(id=${category.id})}" 
+                       th:text="${category.name}">Category</a>
+                </span>
+            </div>
+        </div>
+    </body>
+</html> 

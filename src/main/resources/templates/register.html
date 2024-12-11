@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Register</title>
+        <style>
+            .button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 5px;
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+            }
+            .error {
+                color: red;
+                margin: 10px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Register</h1>
+        
+        <div th:if="${error}" class="error">
+            <p th:text="${error}">Error message</p>
+        </div>
+        
+        <form th:action="@{/register}" method="post">
+            <div>
+                <label>Username: <input type="text" name="username" required/></label>
+            </div>
+            <div>
+                <label>Password: <input type="password" name="password" required/></label>
+            </div>
+            <div>
+                <button type="submit" class="button">Register</button>
+            </div>
+        </form>
+        
+        <div>
+            <a th:href="@{/login}" class="button">Back to login</a>
+        </div>
+    </body>
+</html> 
